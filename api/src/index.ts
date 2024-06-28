@@ -12,3 +12,5 @@ app.use([
 app.listen(3333, () => console.log("Runnig on 3333"));
 
 cronRemoveInativeCart;
+
+export default app;

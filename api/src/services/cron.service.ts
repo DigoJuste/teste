@@ -3,7 +3,8 @@ import cron from 'node-cron';
 
 const prisma = new PrismaClient();
 
-export const cronRemoveInativeCart = cron.schedule('* * * * *', async () => {
+//roda a cada 1 hora
+export const cronRemoveInativeCart = cron.schedule('0 * * * *', async () => {
   const carrinhos = await prisma.carrinho.findMany();
   for (const carrinho of carrinhos) {
     const tempoInativo = Date.now() - carrinho.updatedAt.getTime();
