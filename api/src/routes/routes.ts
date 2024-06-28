@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import carrinhoController from '../controllers/carrinho.controller';
+import carrinhoController from '../controllers/cart.controller';
 
 const api = Router()
 .use(carrinhoController);
