@@ -23,6 +23,7 @@ async function main() {
           name: 'Her Code',
           price: 150
         },
+        
     });
     console.log("Database seeded successfully!");
 }
