@@ -94,6 +94,21 @@ describe('Carrinho Controller', () => {
 
   });
 
+  it('should remove product', async () => {
+    
+    const carrinho = {
+        cartid: cartId,
+        productid: "pmSjGCTfn8w"
+    }
+
+    const res = await request(app)
+      .delete('/removeProductCart')
+      .send(carrinho);
+
+    expect(res.status).toBe(201);
+    expect(res.body.cart.items).not.toContain(carrinho.productid);
+  });
+
   it('should remove product quantity', async () => {
     
     const carrinho = {
@@ -109,22 +124,7 @@ describe('Carrinho Controller', () => {
     expect(res.body.cart.items).toContain(carrinho.productid);
     expect(res.body.cart.items).toContain("quantity\":1");
 
-  });
-
-  it('should remove product', async () => {
-    
-    const carrinho = {
-        cartid: cartId,
-        productid: "pht4Xx5nHMB"
-    }
-
-    const res = await request(app)
-      .delete('/removeProductCart')
-      .send(carrinho);
-
-    expect(res.status).toBe(201);
-    expect(res.body.cart.items).not.toContain(carrinho.productid);
-    
     await prisma.carrinho.delete({ where: { id: res.body.cart.id } });
+
   });
 });
