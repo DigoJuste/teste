@@ -4,19 +4,6 @@ import { getProductById } from './product.service';
 
 const prisma = new PrismaClient();
 
-export const createCart = async (sessionId: string) => {
-
-    return await prisma.carrinho.create({
-        data: {
-            sessionId: sessionId,
-            items: [""],
-            total: 0,
-            updatedAt: new Date(),
-        },
-    });
-
-}
-
 export const addProductCart = async (cartid: number, productid: string) => {
 
     let productAdded = false;
@@ -56,7 +43,7 @@ export const addProductCart = async (cartid: number, productid: string) => {
 
 }
 
-export const removeProductCart = async (cartid: number, productid: string) => {
+export const removeProductCartQuantity = async (cartid: number, productid: string) => {
 
     const { cart } = await getCartAndProduct(cartid, productid);
 
@@ -65,6 +52,41 @@ export const removeProductCart = async (cartid: number, productid: string) => {
     let newCartProducts = cartProducts.map((productCart) => {
         if (productCart.id == productid) {
             return { ...productCart, quantity: productCart.quantity - 1 }
+        } else {
+            return productCart
+        }
+    });
+
+    newCartProducts = newCartProducts.filter(product => product.quantity > 0);
+
+    cart.items = JSON.stringify(newCartProducts);
+    cart.total = 0;
+    cart.updatedAt = new Date();
+
+    for (const produto of newCartProducts) {
+        cart.total = cart.total + (produto.price * produto.quantity)
+    }
+
+    return await prisma.carrinho.update({
+        where: {
+            id: cart.id
+        },
+        data: {
+            ...cart
+        }
+    })
+
+}
+
+export const removeProductCart = async (cartid: number, productid: string) => {
+
+    const { cart } = await getCartAndProduct(cartid, productid);
+
+    let cartProducts = cart.items == "" ? [] : JSON.parse(cart.items.toString());
+
+    let newCartProducts = cartProducts.map((productCart) => {
+        if (productCart.id == productid) {
+            return { ...productCart, quantity: 0 }
         } else {
             return productCart
         }
@@ -108,6 +130,21 @@ export const getcartById = async (cartid: number) => {
     if (inativeTime > 24 * 60 * 60 * 1000) {
         throw new HttpException(422, { cart: "not found" });
     }
+
+    return cart;
+
+}
+
+export const createCart = async (sessionId: string) => {
+
+    const cart =  await prisma.carrinho.create({
+        data: {
+            sessionId: sessionId,
+            items: [""],
+            total: 0,
+            updatedAt: new Date(),
+        },
+    });
 
     return cart;
 

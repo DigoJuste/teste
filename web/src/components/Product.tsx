@@ -1,10 +1,13 @@
-import { ProductType } from "../types/ProductType"
+import { IProduct } from "../types/ProductType"
+import AddCart from "./AddCart";
 import ProductImage from "./Productimage";
+import { ButtonAddItem } from "./shared/buttons/ButtonAddItem";
 
 type ProductProps = {
-    product: ProductType
+    product: IProduct,
+    cartId: number
 }
-export default function Product({ product }: ProductProps) {
+export default function Product({ product, cartId }: ProductProps) {
     return (
         <div className="flex flex-col h-96 p-5 text-black">
             <div className="relative max-h-72 flex-1">
@@ -13,9 +16,9 @@ export default function Product({ product }: ProductProps) {
             </div>
             <div className="font-sans my-3 text-center">
                 <p className="w-30">{product.name}</p>
-                <p className="text-md font-bold">${product.price}</p>
+                <p className="text-md font-bold">${product.price.toFixed(2)}</p>
             </div>
-            <button className="font-mono bg-emerald-800 text-white p-10.5 py-2.5 text-sm text-center uppercase">add to cart</button>
+            <ButtonAddItem cartId={cartId} itemId={product.id} fromCart={false} />
         </div>
     );
 
