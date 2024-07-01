@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 describe('Carrinho Controller', () => {
 
-    let cartId = "";
+    let cartId = 1;
 
   it('should create a new cart', async () => {
     
@@ -22,27 +22,24 @@ describe('Carrinho Controller', () => {
       .send(carrinho);
 
     expect(res.status).toBe(201);
-    expect(res.body.cart).toHaveProperty('id');
-    expect(res.body.cart.sessionId).toBe(carrinho.sessionId);
-    expect(res.body.cart.items).toEqual(carrinho.items);
+    expect(res.body).toHaveProperty('id');
+    expect(res.body.sessionId).toBe(carrinho.sessionId);
+    expect(res.body.items).toEqual(carrinho.items);
 
-    cartId = res.body.cart.id;
+    cartId = res.body.id;
   });
 
   it('should get cart', async () => {
     
     const carrinho = {
-        cartid: cartId
+      cartid: cartId
     }
 
     const res = await request(app)
-      .get('/')
-      .send(carrinho);
+      .get(`/getCartById/${cartId}`);
 
     expect(res.status).toBe(201);
-    expect(res.body.cart.id).toBe(carrinho.cartid);
-
-    cartId = res.body.cart.id;
+    expect(res.body.id).toBe(carrinho.cartid);
   });
 
   it('should add product', async () => {
@@ -102,7 +99,7 @@ describe('Carrinho Controller', () => {
     }
 
     const res = await request(app)
-      .delete('/removeProductCart')
+      .put('/removeProductCart')
       .send(carrinho);
 
     expect(res.status).toBe(201);
@@ -117,7 +114,7 @@ describe('Carrinho Controller', () => {
     }
 
     const res = await request(app)
-      .delete('/removeProductCart')
+      .put('/removeProductCartQuantity')
       .send(carrinho);
 
     expect(res.status).toBe(201);

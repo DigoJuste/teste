@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "command": "cd web && npm run dev",
+        "command": "cd api && npm run test",
         "name": "Run npm dev",
         "request": "launch",
         "type": "node-terminal"

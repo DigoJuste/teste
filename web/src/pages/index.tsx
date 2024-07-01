@@ -54,14 +54,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const timeSession = Date.now() - dateParse;
 
-  if(timeSession < 24 * 60 * 60 * 1000 && user?.sessionId && user?.cartId){
+  if (timeSession < 24 * 60 * 60 * 1000 && user?.sessionId && user?.cartId) {
     cart = await getCart(user.cartId);
-  }else {
-    cart = await createCart(newSessionId);
-    setCookie(ctx, 'user', JSON.stringify({ sessionId: newSessionId, cartId: cart.id, date: new Date() }), {
-      expire: 2 * 24 * 60 * 60,
-      path: '/',
-    });
+    !cart.id ? cart = await createNewCart(ctx, user?.sessionId) : "";
+  } else {
+    cart = await createNewCart(ctx, newSessionId)
   }
 
   return {
@@ -71,5 +68,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   };
 };
+
+async function createNewCart(ctx:any, sessionId: string) {
+  const cart: ICart = await createCart(sessionId);
+  setCookie(ctx, 'user', JSON.stringify({ sessionId: sessionId, cartId: cart.id, date: new Date() }), {
+    expire: 2 * 24 * 60 * 60,
+    path: '/',
+  });
+  return cart
+}
 
 export default Home;
