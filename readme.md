@@ -30,7 +30,13 @@ Isso irá construir e iniciar os contêineres do backend.
 cd web
 ```
 
-3. Inicie o servidor de desenvolvimento do frontend:
+3. Instale as dependências:
+
+```bash
+npm i
+```
+
+1. Inicie o servidor de desenvolvimento do frontend:
 
 ```bash
 npm run dev
