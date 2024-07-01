@@ -1,5 +1,6 @@
 // components/Cart.tsx
 
+import { useOpen } from '@/contexts/OpenContext';
 import { removeProductCart, getCart, addProductCart } from '@/services/store';
 import { ICart, IProduct } from '@/types/ProductType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +15,7 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ cart }) => {
     const { id } = cart;
     const queryClient = useQueryClient();
+    const {open, setOpen} = useOpen();
 
     const itemNew = cart.items == "" ? [] : JSON.parse(cart.items);
     const data = cart;
@@ -37,6 +39,7 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
         <div className="p-4 w-full max-w-md text-black mx-auto">
             <div className="flex justify-between items-center border-b pb-2 mb-4">
                 <span>{itemNew?.length} Item</span>
+                <button onClick={() => setOpen(!open)} className="text-gray-600 hover:text-gray-900">×</button>
             </div>
             <div className="text-center mb-4">
                 <span className="text-sm">Spend more $14.00 to get free shipping!</span>
@@ -68,7 +71,7 @@ const Cart: React.FC<CartProps> = ({ cart }) => {
                 <span className="text-gray-700">${data.total.toFixed(2)}</span>
             </div>
             <div className="flex flex-col mt-4">
-                <button className="bg-green-800 text-white px-4 py-2 mb-2">Check Out - ${data.total.toFixed(2)}</button>
+                <button className="bg-green-800 text-white px-4 py-2 mb-2">Check Out  ${data.total.toFixed(2)}</button>
                 <button className="bg-purple-500 text-white px-4 py-2">Shop Pay</button>
             </div>
             <div className="text-center mt-4">

@@ -1,9 +1,12 @@
+import { useOpen } from "@/contexts/OpenContext";
 import { addProductCart } from "@/services/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const ButtonAddItem = ({ cartId, itemId, fromCart }: { cartId: number, itemId: string, fromCart: boolean }) => {
 
     const queryClient = useQueryClient();
+
+    const {open, setOpen} = useOpen();
 
     const mutationAdd = useMutation({
         mutationFn: addProductCart,
@@ -14,7 +17,7 @@ export const ButtonAddItem = ({ cartId, itemId, fromCart }: { cartId: number, it
         try {
             await mutationAdd.mutateAsync({ cartId, productId })
             queryClient.invalidateQueries({ queryKey: ["getCart"] })
-            queryClient.invalidateQueries({ queryKey: ["getCart2"] })
+            setOpen(true);
         } catch (error) {
             console.log(error)
         }

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { useState } from "react";
 import Cart from "./Cart";
 import { ICart } from "@/types/ProductType";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCart } from "@/services/store";
 import HamburgerMenu from "./MenuSm";
+import {useOpen} from "../contexts/OpenContext";
 
 interface NavbarProps {
     cart: ICart
@@ -12,7 +12,7 @@ interface NavbarProps {
 
 const Navbar = ({ cart }: NavbarProps) => {
 
-    const [open, setOpen] = useState(false);
+    const {open, setOpen} = useOpen();
 
     const { data } = useQuery<ICart>({
         queryFn: () => getCart(cart.id),
@@ -77,7 +77,7 @@ const Navbar = ({ cart }: NavbarProps) => {
                         </div>
                         {open && (
                             <div onClick={() => setOpen(!open)} className="fixed w-full h-screen bg-black/25 left-0 top-0 z-50">
-                                <div onClick={(e) => e.stopPropagation()} className="absolute bg-gray-100 right-0 top-0 w-1/2 h-screen p-12 overflow-scroll max-w-[40rem]">
+                                <div onClick={(e) => e.stopPropagation()} className="absolute bg-gray-100 right-0 top-0 h-screen p-12 overflow-scroll max-w-[40rem]">
                                     <div className="flex h-screen w-full">
                                         <Cart cart={data} />
                                     </div>
